@@ -1,0 +1,38 @@
+===================[CoverType]=================
+
+======[mix]
+5:12824.089720700002 seconds:189
+10:11220.9215174 seconds:126
+20:1845.0317722 seconds:0
+======[ht]
+5:22794.7077317 seconds:144 times
+10:7050.5797784999995 seconds: 8 times
+20:4478.7556673 seconds: 0 times
+
+=====[gnb]
+5:983.5782629 seconds:180 times
+10:755.5617952 seconds:82 times
+20:714.7053303 seconds: 0 times
+
+=====[knn]
+5:2826.9818316 seconds: 182 times
+10:2012.6273092 seconds:23 times
+20:1158.1925802 seconds:2 times
+=====[SVC]
+5:
+10:
+20:4308.3762689 seconds: 4 times
+===================[synthetic]=======[features=8, classes=5]==========
+=======[mix]
+5: 2722.8271877 seconds:27
+10:2049.0062439000003 seconds:40
+20:598.0546452 seconds:0
+
+======================[power]
+20:18:0
+10:37:2
+5:52:3
+=======================[Sensor Stream,https://www.cse.fau.edu/~xqzhu/stream.html]
+2:195.9151751 seconds:0
+1:665.7676958 seconds:7 times
+0: 3393.9084981 seconds:92

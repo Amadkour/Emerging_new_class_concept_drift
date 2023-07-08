@@ -52,7 +52,8 @@ class SEA(ClassifierMixin, BaseEnsemble):
     [0.935      0.93569212 0.93540766 0.93569212 0.93467337]]
     """
 
-    def __init__(self, base_estimator=None, n_estimators=5, metric=balanced_accuracy_score, oversampled="None", des="None"):
+    def __init__(self, base_estimator=None, n_estimators=5, metric=balanced_accuracy_score, oversampled="None",
+                 des="None"):
         """Initialization."""
         self.base_estimator = base_estimator
         self.n_estimators = n_estimators
@@ -78,7 +79,7 @@ class SEA(ClassifierMixin, BaseEnsemble):
                 raise ValueError("number of features does not match")
 
         self.X_, self.y_ = X, y
-        self.dsel_X_, self.dsel_y_ =  self.X_, self.y_
+        self.dsel_X_, self.dsel_y_ = self.X_, self.y_
 
         # Check classes
         self.classes_ = classes
@@ -94,7 +95,6 @@ class SEA(ClassifierMixin, BaseEnsemble):
         if len(self.ensemble_) > self.n_estimators:
             self.prune_index_ = np.argmin(
                 [self.metric(y, clf.predict(X)) for clf in self.ensemble_])
-            # print(self.prune_index_)
             del self.ensemble_[self.prune_index_]
             a = (((self.prune_index_ + 1) * 10) - 10)
             b = (((self.prune_index_ + 1) * 10))
@@ -102,13 +102,11 @@ class SEA(ClassifierMixin, BaseEnsemble):
 
         return self
 
-
     def ensemble_support_matrix(self, X):
         """Ensemble support matrix."""
         return np.array([member_clf.predict_proba(X) for member_clf in self.ensemble_])
 
-# 0.3, 0.7
-
+    # 0.3, 0.7
 
     def predict(self, X):
         """
@@ -127,7 +125,7 @@ class SEA(ClassifierMixin, BaseEnsemble):
 
         # Check is fit had been called
         check_is_fitted(self, "classes_")
-        X = check_array(X)
+        # X = check_array(X)
         if X.shape[1] != self.X_.shape[1]:
             raise ValueError("number of features does not match")
 

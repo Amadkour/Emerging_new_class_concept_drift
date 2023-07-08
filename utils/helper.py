@@ -1,122 +1,140 @@
-
+import numpy as np
+from scipy.io.matlab._streams import make_stream
+from sklearn.datasets import make_classification
 from strlearn.streams import StreamGenerator, ARFFParser
 
 
 def realstreams():
-    data=ARFFParser("datasets/coverType.arff", n_chunks=20, chunk_size=1000 )
+    data = ARFFParser("datasets/coverType.arff", n_chunks=200, chunk_size=2000)
     return {
-        # "krkopt": ARFFParser("datasets/allclass.arff", n_chunks=50, chunk_size=250),
-        # "krkopt2": ARFFParser("datasets/krkopt.arff", n_chunks=50, chunk_size=250),
-        # "TCP": ARFFParser("datasets/TCP.arff", n_chunks=300, chunk_size=1000),
-        # "abalone": ARFFParser("datasets/winequalitywhite/train.arff", n_chunks=20, chunk_size=100),
-        # "poker-lsn-1-2vsAll": ARFFParser("datasets/poker-lsn-1-2vsAll-pruned.arff", n_chunks=100, chunk_size=250),
         "covertype": data,
-
     }
+
 
 def realstreams2():
+    # data=ARFFParser("datasets/power.arff", n_chunks=200, chunk_size=2000)
+    data = ARFFParser("datasets/sensors.arff", n_chunks=200, chunk_size=2000)
     return {
-        "covtypeNorm-1-2vsAll": ARFFParser("datasets/covtypeNorm-1-2vsAll-pruned.arff", n_chunks=265, chunk_size=1000),
-        "poker-lsn-1-2vsAll": ARFFParser("datasets/poker-lsn-1-2vsAll-pruned.arff", n_chunks=359, chunk_size=1000),
-    }
-
-def moa_streams():
-    return {
-        # "gr_css5_rs804_nd1_ln1_d85_50000": ARFFParser("streams/gr_css5_rs804_nd1_ln1_d85_50000.arff", n_chunks=200, chunk_size=250),
-        # "gr_css5_rs804_nd1_ln1_d90_50000": ARFFParser("streams/gr_css5_rs804_nd1_ln1_d90_50000.arff", n_chunks=200, chunk_size=250),
-        # "gr_css5_rs804_nd1_ln1_d95_50000": ARFFParser("streams/gr_css5_rs804_nd1_ln1_d95_50000.arff", n_chunks=200, chunk_size=250),
-        "gr_css5_rs804_nd1_ln1_d97_50000": ARFFParser("streams/gr_css5_rs804_nd1_ln1_d97_50000.arff", n_chunks=200, chunk_size=250),
-        # "gr_css5_rs804_nd1_ln3_d85_50000": ARFFParser("streams/gr_css5_rs804_nd1_ln3_d85_50000.arff", n_chunks=200, chunk_size=250),
-        # "gr_css5_rs804_nd1_ln3_d90_50000": ARFFParser("streams/gr_css5_rs804_nd1_ln3_d90_50000.arff", n_chunks=200, chunk_size=250),
-        # "gr_css5_rs804_nd1_ln3_d95_50000": ARFFParser("streams/gr_css5_rs804_nd1_ln3_d95_50000.arff", n_chunks=200, chunk_size=250),
-        "gr_css5_rs804_nd1_ln3_d97_50000": ARFFParser("streams/gr_css5_rs804_nd1_ln3_d97_50000.arff", n_chunks=200, chunk_size=250),
-        # "gr_css5_rs804_nd1_ln5_d85_50000": ARFFParser("streams/gr_css5_rs804_nd1_ln5_d85_50000.arff", n_chunks=200, chunk_size=250),
-        # "gr_css5_rs804_nd1_ln5_d90_50000": ARFFParser("streams/gr_css5_rs804_nd1_ln5_d90_50000.arff", n_chunks=200, chunk_size=250),
-        # "gr_css5_rs804_nd1_ln5_d95_50000": ARFFParser("streams/gr_css5_rs804_nd1_ln5_d95_50000.arff", n_chunks=200, chunk_size=250),
-        "gr_css5_rs804_nd1_ln5_d97_50000": ARFFParser("streams/gr_css5_rs804_nd1_ln5_d97_50000.arff", n_chunks=200, chunk_size=250),
-        # "gr_css999_rs804_nd1_ln1_d85_50000": ARFFParser("streams/gr_css999_rs804_nd1_ln1_d85_50000.arff", n_chunks=200, chunk_size=250),
-        # "gr_css999_rs804_nd1_ln1_d90_50000": ARFFParser("streams/gr_css999_rs804_nd1_ln1_d90_50000.arff", n_chunks=200, chunk_size=250),
-        # "gr_css999_rs804_nd1_ln1_d95_50000": ARFFParser("streams/gr_css999_rs804_nd1_ln1_d95_50000.arff", n_chunks=200, chunk_size=250),
-        "gr_css999_rs804_nd1_ln1_d97_50000": ARFFParser("streams/gr_css999_rs804_nd1_ln1_d97_50000.arff", n_chunks=200, chunk_size=250),
-        # "gr_css999_rs804_nd1_ln3_d85_50000": ARFFParser("streams/gr_css999_rs804_nd1_ln3_d85_50000.arff", n_chunks=200, chunk_size=250),
-        # "gr_css999_rs804_nd1_ln3_d90_50000": ARFFParser("streams/gr_css999_rs804_nd1_ln3_d90_50000.arff", n_chunks=200, chunk_size=250),
-        # "gr_css999_rs804_nd1_ln3_d95_50000": ARFFParser("streams/gr_css999_rs804_nd1_ln3_d95_50000.arff", n_chunks=200, chunk_size=250),
-        "gr_css999_rs804_nd1_ln3_d97_50000": ARFFParser("streams/gr_css999_rs804_nd1_ln3_d97_50000.arff", n_chunks=200, chunk_size=250),
-        # "gr_css999_rs804_nd1_ln5_d85_50000": ARFFParser("streams/gr_css999_rs804_nd1_ln5_d85_50000.arff", n_chunks=200, chunk_size=250),
-        # "gr_css999_rs804_nd1_ln5_d90_50000": ARFFParser("streams/gr_css999_rs804_nd1_ln5_d90_50000.arff", n_chunks=200, chunk_size=250),
-        # "gr_css999_rs804_nd1_ln5_d95_50000": ARFFParser("streams/gr_css999_rs804_nd1_ln5_d95_50000.arff", n_chunks=200, chunk_size=250),
-        "gr_css999_rs804_nd1_ln5_d97_50000": ARFFParser("streams/gr_css999_rs804_nd1_ln5_d97_50000.arff", n_chunks=200, chunk_size=250),
-        # "inc_css5_rs804_nd1_ln1_d85_50000": ARFFParser("streams/inc_css5_rs804_nd1_ln1_d85_50000.arff", n_chunks=200, chunk_size=250),
-        # "inc_css5_rs804_nd1_ln1_d90_50000": ARFFParser("streams/inc_css5_rs804_nd1_ln1_d90_50000.arff", n_chunks=200, chunk_size=250),
-        # "inc_css5_rs804_nd1_ln1_d95_50000": ARFFParser("streams/inc_css5_rs804_nd1_ln1_d95_50000.arff", n_chunks=200, chunk_size=250),
-        "inc_css5_rs804_nd1_ln1_d97_50000": ARFFParser("streams/inc_css5_rs804_nd1_ln1_d97_50000.arff", n_chunks=200, chunk_size=250),
-        # "inc_css5_rs804_nd1_ln3_d85_50000": ARFFParser("streams/inc_css5_rs804_nd1_ln3_d85_50000.arff", n_chunks=200, chunk_size=250),
-        # "inc_css5_rs804_nd1_ln3_d90_50000": ARFFParser("streams/inc_css5_rs804_nd1_ln3_d90_50000.arff", n_chunks=200, chunk_size=250),
-        # "inc_css5_rs804_nd1_ln3_d95_50000": ARFFParser("streams/inc_css5_rs804_nd1_ln3_d95_50000.arff", n_chunks=200, chunk_size=250),
-        "inc_css5_rs804_nd1_ln3_d97_50000": ARFFParser("streams/inc_css5_rs804_nd1_ln3_d97_50000.arff", n_chunks=200, chunk_size=250),
-        # "inc_css5_rs804_nd1_ln5_d85_50000": ARFFParser("streams/inc_css5_rs804_nd1_ln5_d85_50000.arff", n_chunks=200, chunk_size=250),
-        # "inc_css5_rs804_nd1_ln5_d90_50000": ARFFParser("streams/inc_css5_rs804_nd1_ln5_d90_50000.arff", n_chunks=200, chunk_size=250),
-        # "inc_css5_rs804_nd1_ln5_d95_50000": ARFFParser("streams/inc_css5_rs804_nd1_ln5_d95_50000.arff", n_chunks=200, chunk_size=250),
-        "inc_css5_rs804_nd1_ln5_d97_50000": ARFFParser("streams/inc_css5_rs804_nd1_ln5_d97_50000.arff", n_chunks=200, chunk_size=250),
+        "sensors": data,
     }
 
 
-def toystreams(random_state):
-    # Variables
-    Multi_distributions = [[0.96, 0.01,0.01,0.01,0.01]]
-    binary_distributions = [[0.97, 0.03]]
-    distributions=Multi_distributions
-    label_noises = [
-        0.01,
-        0.03,
-        0.05,
-    ]
-    incremental = [(5,True),(5,False), (100,True)]
-    n_drifts = 10
+def realstreams3():
+    # data=ARFFParser("datasets/power.arff", n_chunks=200, chunk_size=2000)
+    data = ARFFParser("datasets/synthetic.arff", n_chunks=200, chunk_size=2000)
+    return {
+        "synthetic": data,
+    }
 
-    # Prepare streams
+
+def steaming2():
     streams = {}
-    for drift_type in incremental:
-        for distribution in distributions:
-            for flip_y in label_noises:
-                    spacing ,type=drift_type
-                    stream = StreamGenerator(
-                        incremental=type,
-                        weights=distribution,
-                        random_state=random_state,
-                        y_flip=flip_y,
-                        concept_sigmoid_spacing=spacing,
-                        n_drifts=n_drifts,
-                        chunk_size=250,
-                        n_chunks=200,
-                        n_clusters_per_class=1,
-                        n_features=8,
-                        n_informative=8,
-                        n_redundant=0,
-                        n_repeated=0,
-                        n_classes=5
-                    )
-                    if spacing is None and drift_type == True:
-                        pass
-                    else:
-                        streams.update({str(stream): stream})
-                    print(str(stream))
+    n_classes = 4
+    n_features = 10
+    n_chunks = 200
+    drift_type=False
+    spacing=5
+    stream = StreamGenerator(n_chunks=n_chunks,chunk_size= 2000,n_features= n_features, n_drifts=20, n_classes=n_classes,
+                         y_flip=n_features * 0.7, concept_sigmoid_spacing=spacing,incremental=drift_type,n_informative=5,
+
+                             )
+    if spacing == None and drift_type == True:
+        pass
+    else:
+        streams.update({str(stream): stream})
 
     return streams
 
 
-def streams(random_state):
+def streaam2():
+    import numpy as np
+    from sklearn.datasets import make_classification
+
+    # Set the seed for reproducibility
+    np.random.seed(42)
+
+    # Generate an initial dataset with two existing classes
+    X, y = make_classification(
+        n_samples=300000,
+        n_features=10,
+        n_informative=5,
+        scale=1,
+        n_classes=4,
+        random_state=42
+    )
+
+    # Generate an emerging new class dataset
+    X_emerging, _ = make_classification(
+        n_samples=100000,
+        n_features=10,
+        n_informative=5,
+        scale=100,
+        n_classes=1,
+        random_state=42
+    )
+    y_emerging = np.ones(100000) + 4
+
+    # Concatenate the existing dataset with the emerging new class dataset
+    X = np.concatenate((X, X_emerging), axis=0)
+    y = np.concatenate((y, y_emerging), axis=0)
+
+    # Shuffle the dataset
+    shuffle_indices = np.random.permutation(X.shape[0])
+    X = X[shuffle_indices]
+    y = y[shuffle_indices]
+    # X2, y2 = make_classification(
+    #     n_samples=150000,
+    #     n_features=5,
+    #     n_informative=2,
+    #     n_clusters_per_class=1,
+    #     n_classes=3,
+    #     random_state=333
+    # )
+    # Concatenate the existing dataset with the emerging new class dataset
+    X = np.concatenate((X, X_emerging), axis=0)
+    y = np.concatenate((y, y_emerging), axis=0)
+
+    # Shuffle the dataset
+    shuffle_indices = np.random.permutation(X.shape[0])
+    # X = X[shuffle_indices]
+    # y = y[shuffle_indices]
+    with open('../datasets/synthetic.arff', 'a') as file:
+        file.write('''@relation synthetic
+@attribute att0 numeric
+@attribute att1 numeric
+@attribute att2 numeric
+@attribute att3 numeric
+@attribute att4 numeric
+@attribute att5 numeric
+@attribute att6 numeric
+@attribute att7 numeric
+@attribute att8 numeric
+@attribute att9 numeric
+@attribute class {0,1,2,3,5}
+@data
+''')
+        # Append the content to the file
+        for i in range(len(X)):
+            s = ''
+            for j in range(len(X[i])):
+                if (j == 9):
+                    s += str(X[i][j]) + ',' + str(y[i])
+                else:
+                    s += str(X[i][j]) + ','
+            file.write(s + '\n')
+        file.close()
+
+
+def streams():
     # Variables
     # distributions = [[0.95, 0.05], [0.90, 0.10], [0.85, 0.15]]
-    distributions = [[0.97, 0.03]]
+    distributions = [[0.27, 0.23, 0.3, 0.2]]
     label_noises = [
-        0.01,
-        0.03,
-        0.05,
+        0.21,
     ]
-    incremental = [False, True]
-    ccs = [5, None]
-    n_drifts = 1
+    incremental = [True]
+    ccs = [5]
+    n_drifts = 50
 
     # Prepare streams
     streams = {}
@@ -127,13 +145,14 @@ def streams(random_state):
                     stream = StreamGenerator(
                         incremental=drift_type,
                         weights=distribution,
-                        random_state=random_state,
+                        random_state=123,
                         y_flip=flip_y,
                         concept_sigmoid_spacing=spacing,
                         n_drifts=n_drifts,
-                        chunk_size=250,
+                        chunk_size=2000,
                         n_chunks=200,
                         n_clusters_per_class=1,
+                        n_classes=4,
                         n_features=8,
                         n_informative=8,
                         n_redundant=0,
@@ -146,42 +165,4 @@ def streams(random_state):
 
     return streams
 
-
-def timestream(chunk_size):
-    # Variables
-    distributions = [[0.80, 0.20]]
-    label_noises = [
-        0.01,
-    ]
-    incremental = [False]
-    ccs = [None]
-    n_drifts = 1
-
-    # Prepare streams
-    streams = {}
-    for drift_type in incremental:
-        for distribution in distributions:
-            for flip_y in label_noises:
-                for spacing in ccs:
-                    stream = StreamGenerator(
-                        incremental=drift_type,
-                        weights=distribution,
-                        random_state=1994,
-                        y_flip=flip_y,
-                        concept_sigmoid_spacing=spacing,
-                        n_drifts=n_drifts,
-                        chunk_size=chunk_size,
-                        n_chunks=2,
-                        n_clusters_per_class=1,
-                        n_features=8,
-                        n_informative=8,
-                        n_redundant=0,
-                        n_repeated=0,
-                    )
-                    if spacing == None and drift_type == True:
-                        pass
-                    else:
-                        streams.update({str(stream): stream})
-
-    return streams
-toystreams(100)
+# streaam2()
