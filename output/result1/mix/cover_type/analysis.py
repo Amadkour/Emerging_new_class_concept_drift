@@ -16,10 +16,10 @@ rcParams["font.family"] = "monospace"
 colors = [(0, 0, 0), (0, 0, 0.9), (0, 0, 0.9), (0.9, 0, 0), (0.9, 0, 0)]
 ls = ["--", "-", ":", "-", ":"]
 lw = [1, 1, 1, 1, 1]
-names = ["5",'10','20' ]
-methods = ["ht", "gnb", "KNN", "SVC"]
+names = ['GNB']
+methods = ['SENCForst','KENNE','SENNE',"PA",]
 metrics = ["Balanced accuracy", "G-mean",'f1_score', "precision", "recall"]
-clfs = ["Cover Type","Cover Typ",'Cover Typ']
+clfs = ["Cover Type"]
 
 
 # print(scores.shape)
@@ -145,7 +145,7 @@ def plot_radars(
     plt.grid(ls=":", c=(0.7, 0.7, 0.7))
 
     # Add a title
-    plt.title("%s %s" % (clfs[j], parameter_name), size=8, y=1.08, fontfamily="serif")
+    plt.title("%s %s" % (name, parameter_name), size=8, y=1.08, fontfamily="serif")
     plt.tight_layout()
 
     # Draw labels

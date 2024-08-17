@@ -10,8 +10,12 @@ def realstreams():
         "covertype": data,
     }
 
-
-def realstreams2():
+def realstreams_har():
+    data = ARFFParser("datasets/aea.arff", n_chunks=200, chunk_size=500)
+    return {
+        "har": data,
+    }
+def realstreams_sensor():
     # data=ARFFParser("datasets/power.arff", n_chunks=200, chunk_size=2000)
     data = ARFFParser("datasets/sensors.arff", n_chunks=200, chunk_size=2000)
     return {

@@ -17,19 +17,20 @@ from utils.SEA import SEA
 from utils.StratifiedBagging import StratifiedBagging
 from utils.train_and_test_stratigy import MyTestThenTrain
 
-# streams = helper.streams(random_state=42)
-streams = helper.realstreams2()
+streams = helper.realstreams_har()
+
 gnb = SEA(base_estimator=StratifiedBagging(base_estimator=GaussianNB()), des="None", oversampled='None')
 knn = SEA(base_estimator=StratifiedBagging(base_estimator=KNeighborsClassifier(n_neighbors=1)), des="None",
-           oversampled='None')
+          oversampled='None')
 svc = SEA(base_estimator=StratifiedBagging(base_estimator=SVC(probability=True, random_state=42)), des="None",
-           oversampled=None)
+          oversampled=None)
 ht = SEA(base_estimator=StratifiedBagging(base_estimator=HoeffdingTreeClassifier()), des="None", oversampled='None')
 
-
+algorithms= ['SENCForst',
+             'KENNE', 'SENNE',
+             "PA", ]
 # Define worker
 def worker(i, stream_n):
-    stream = streams[stream_n]
     drift_methods = [
         ADWIN(),
         # DDM()
@@ -39,46 +40,51 @@ def worker(i, stream_n):
         # 'knn',
         # 'svc',
         # 'ht',
-        'mix'
+        'gnb'
     ]
     classifiers = [
 
         (
-            ht,
             gnb,
-            knn,
-            svc
+            # svc
+            # ht,
+
+            # knn,
+
         )]
 
-    threshold = [20]
+    threshold = [10]
+    cclfs = [clone(clf) for clf in classifiers[0]]
+    eval = MyTestThenTrain(
+        cclfs,
+        algoritnmsName=algorithms,
+        metrics=(
+            balanced_accuracy_score,
+            geometric_mean_score_1,
+            f1_score,
+            precision,
+            recall,
+        ),
+        concept_drift_method=drift_methods[0],
+        thresold=threshold[0],
+    )
+    for index,algorithm in enumerate(algorithms):
+            start_time = time.perf_counter()
+            streams = helper.realstreams_har()
+            print("Starting stream %i/%i" % (i + 1, len(streams)))
+            eval.process(
+                streams[stream_n],
+                algorithm=algorithm,
+                algorithmIndex=index
+            )
 
-    for t in threshold:
-        for index, classifer_name in enumerate(classifiers_name):
-            cclfs = [clone(clf) for clf in classifiers[index]]
+            finish_time = time.perf_counter()
+            print(f"==========(%s)=========finished in {finish_time - start_time} seconds"% (algorithm),)
 
-            for method in drift_methods:
-                print("Starting stream %i/%i" % (i + 1, len(streams)))
-                eval = MyTestThenTrain(metrics=(
-                    balanced_accuracy_score,
-                    geometric_mean_score_1,
-                    f1_score,
-                    precision,
-                    recall,
-                ))
-                eval.process(
-                    stream,
-                    cclfs,
-                    concept_drift_method=method,
-                    thresold=t
-
-                )
-
-                print("Done stream %i/%i" % (i + 1, len(streams)))
-
-                results = eval.scores
-                # np.save(f"output/result1/%s/cover_type/%s" % (classifiers_name[index], t), results)
-                # np.save(f"output/result1/%s/synthetic/%s" % (classifiers_name[index], t), results)
-                np.save(f"output/result1/%s/sensor/%s" % (classifiers_name[index], t), results)
+    results = eval.scores
+    # np.save(f"output/result1/%s/cover_type/%s" % (classifiers_name[index], t), results)
+    # np.save(f"output/result1/%s/synthetic/%s" % (classifiers_name[index], t), results)
+    np.save(f"output/result1/%s/har/GNB" % (classifiers_name[0]), results)
 
 
 jobs = []
@@ -90,6 +96,4 @@ if __name__ == '__main__':
     # worker(i, stream_n)
     start_time = time.perf_counter()
     result = Parallel(n_jobs=4, prefer="threads")(delayed(worker)(i, stream_n) for i, stream_n in enumerate(streams))
-    finish_time = time.perf_counter()
-    print(f"Program finished in {finish_time - start_time} seconds")
     print(result)
