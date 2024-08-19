@@ -120,8 +120,10 @@ class MyTestThenTrain:
                         y_prediction[i] = y_prediction[i] + y_pred[i]
                     '''concept drift'''
                     for index2 in range(len(y_prediction)):
-                        self.concept_drift_method.add_element(y_prediction[index2])
-                        if self.concept_drift_method.detected_change():
+                        # self.concept_drift_method.add_element(y_prediction[index2])
+                        self.concept_drift_method.update(y_prediction[index2])
+                        # if self.concept_drift_method.detected_change():
+                        if self.concept_drift_method.drift_detected:
                             # self.calculations(X[index2], y_prediction[index2], concept_drift_method,clf)
                             self.calculations(X, y, index2, self.concept_drift_method)
                         self.scores[algorithmIndex, stream.chunk_id - 1] = [
@@ -135,9 +137,11 @@ class MyTestThenTrain:
 
             if len(self.buffer_x) >= 5:
                 drift_count+=1
-                if(len(X)>0):
+                try:
                     [c.partial_fit(X, y, self.stream_.classes_) for c in self.clfs_]
                     self.buffer_x.clear()
+                except:
+                    print("=================> error here: ")
             if stream.is_dry():
                 print("==================[number of updates: %s]"%drift_count)
                 drift_count=0

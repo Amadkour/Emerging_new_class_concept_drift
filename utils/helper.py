@@ -1,4 +1,5 @@
 import numpy as np
+from river.datasets import synth
 from scipy.io.matlab._streams import make_stream
 from sklearn.datasets import make_classification
 from strlearn.streams import StreamGenerator, ARFFParser
@@ -46,6 +47,21 @@ def steaming2():
         pass
     else:
         streams.update({str(stream): stream})
+
+    return streams
+
+
+def steaming_river():
+    streams = {}
+    n_classes = 4
+    n_features = 10
+    n_chunks = 200
+    drift_type=False
+    spacing=5
+    stream = synth.LEDDrift(seed = 112, noise_percentage = 0.28,
+                         irrelevant_features= True, n_drift_features=4)
+
+    streams.update({str(stream): stream})
 
     return streams
 

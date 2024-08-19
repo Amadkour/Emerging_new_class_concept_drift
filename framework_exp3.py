@@ -3,9 +3,10 @@ from sklearn.metrics import balanced_accuracy_score, f1_score
 
 import numpy as np
 from sklearn.naive_bayes import GaussianNB
-from skmultiflow.drift_detection import ADWIN, DDM
+from river.drift import ADWIN
+from river.drift.binary import DDM
 from sklearn.base import clone
-from skmultiflow.trees import HoeffdingTreeClassifier
+from river.tree import HoeffdingTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 
@@ -26,8 +27,10 @@ svc = SEA(base_estimator=StratifiedBagging(base_estimator=SVC(probability=True, 
           oversampled=None)
 ht = SEA(base_estimator=StratifiedBagging(base_estimator=HoeffdingTreeClassifier()), des="None", oversampled='None')
 
-algorithms= ['SENCForst',
-             'KENNE', 'SENNE',
+algorithms= [
+    'SENCForst',
+             'KENNE',
+             'SENNE',
              "PA", ]
 # Define worker
 def worker(i, stream_n):
