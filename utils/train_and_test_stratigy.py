@@ -156,9 +156,8 @@ class MyTestThenTrain:
         if np.min(distance) > np.max(self.centroids_distance):
             '''detect new object'''
             self.buffer_x.append(X[index])
-            concept_drift_method.reset()
-
         else:
+
             '''update model'''
             # concept_drift_method.reset()
             # # Train
