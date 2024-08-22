@@ -23,10 +23,12 @@ def realstreams_sensor():
         "sensors": data,
     }
 
+import os.path
 
-def realstreams3():
-    # data=ARFFParser("datasets/power.arff", n_chunks=200, chunk_size=2000)
-    data = ARFFParser("datasets/synthetic.arff", n_chunks=200, chunk_size=2000)
+def realstreams_stream_learning():
+    # if not os.path.isfile("datasets/synthetic.arff"):
+    streaam_stream_learning_generator()
+    data = ARFFParser("synthetic.arff", n_chunks=200, chunk_size=2000)
     return {
         "synthetic": data,
     }
@@ -66,7 +68,7 @@ def steaming_river():
     return streams
 
 
-def streaam2():
+def streaam_stream_learning_generator():
     import numpy as np
     from sklearn.datasets import make_classification
 
@@ -118,7 +120,7 @@ def streaam2():
     shuffle_indices = np.random.permutation(X.shape[0])
     # X = X[shuffle_indices]
     # y = y[shuffle_indices]
-    with open('../datasets/synthetic.arff', 'a') as file:
+    with open('synthetic.arff', 'w') as file:
         file.write('''@relation synthetic
 @attribute att0 numeric
 @attribute att1 numeric

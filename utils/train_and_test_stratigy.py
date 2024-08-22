@@ -135,7 +135,7 @@ class MyTestThenTrain:
                     [c.partial_fit(X, y, self.stream_.classes_) for c in self.clfs_]
                     print(min(stream.chunk_id, 199), ' is finish')
 
-            if len(self.buffer_x) >= 5:
+            if len(self.buffer_x) >= 20:
                 drift_count+=1
                 try:
                     [c.partial_fit(X, y, self.stream_.classes_) for c in self.clfs_]
