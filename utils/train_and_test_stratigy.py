@@ -1,4 +1,5 @@
 import math
+from sklearn.metrics.pairwise import cosine_similarity
 
 import numpy
 import numpy as np
@@ -16,13 +17,18 @@ from preprocessing.SENNE import SENNE
 class MyTestThenTrain:
 
     def __init__(
-            self,classifier,algoritnmsName, metrics=(accuracy_score, balanced_accuracy_score), concept_drift_method=None, thresold=10,
+            self,classifier,algoritnmsName,buffer_type, metrics=(accuracy_score, balanced_accuracy_score), concept_drift_method=None,
             verbose=False
     ):
         self.stream_ = None
         self.buffer_x = []
+        self.buffer_type=buffer_type
+        self.current_buffer_size=10;
+        self.aggregated_buffer_length = 0;
+        self.stream_distribution=[]
+        self.stream_update_times=[]
+        self.stream_emergence_new_instance_count=[]
         self.concept_drift_method = concept_drift_method
-        self.thresold = thresold
         self.centroids_distance = []
         self.balanced_methods = []
         self.classifier = classifier
@@ -39,9 +45,18 @@ class MyTestThenTrain:
         self.scores = np.zeros(
             (len(algoritnmsName), 200, len(self.metrics))
         )
+    def get_buffer_type(self):
+        if self.buffer_type=='5':
+            return 5
+        if self.buffer_type=='10':
+            return 10
+        if self.buffer_type=='20':
+            return 20
+        if self.buffer_type=='adaptive':
+            return self.current_buffer_size
     def score_of_relatedWorks(self,X, y, y_pred, stream_index,algorithmIndex):
         indices = [i for i, y in enumerate(y_pred) if y == -1]
-        self.buffer_x.append(X[indices])
+        self.buffer_x.extend(X[indices])
         indices2 = [i for i, x in enumerate(y_pred) if x != -1]
         # print(np.unique(y[indices2]))
         # print(np.unique(y_pred[indices2],))
@@ -52,19 +67,6 @@ class MyTestThenTrain:
         ]
 
     def process(self, stream, algorithm='pa', algorithmIndex=0 ):
-        """
-        Perform learning procedure on data stream.
-
-        :param concept_drift_method: 
-        :param stream: Data stream as an object
-        :type stream: object
-        :param classifier: scikit-learn estimator of list of scikit-learn estimators.
-        :type classifier: tuple or function
-
-        Parameters
-        ----------
-        use_concept_drift
-        """
         drift_count = 0
         # Verify if pool of classifiers or one
         if isinstance(self.classifier, ClassifierMixin):
@@ -82,8 +84,22 @@ class MyTestThenTrain:
         while True:
 
             chunk = stream.get_chunk()
-            print(stream.chunk_id)
+
             X, y = chunk
+            chunk_mean=np.mean(X[:,0])
+            chunk_std=np.std(X[:,0])
+            print(stream.chunk_id)
+            if len(self.stream_distribution) > 1:
+                averge_update_times = math.floor(self.aggregated_buffer_length/(stream.chunk_id+1))
+                similar_update_times=self.best_threshold([chunk_mean,chunk_std])
+                # print("averge_update_times is: %s"%averge_update_times)
+                # print("similar_update_times is: %s"%similar_update_times)
+                # print("stream_update_times is: %s"% self.stream_update_times)
+                # print("stream_emergence_new_instance_count is: %s"% self.stream_emergence_new_instance_count)
+
+                if averge_update_times!=0 :
+                  self.current_buffer_size =(similar_update_times/averge_update_times)*averge_update_times
+            # print(self.current_buffer_size)
             if algorithm == 'KENNE':
                 if stream.previous_chunk is not None:
                     y_pred = numpy.array(self.KENNE.predict(X))
@@ -134,8 +150,13 @@ class MyTestThenTrain:
                     # Train
                     [c.partial_fit(X, y, self.stream_.classes_) for c in self.clfs_]
                     print(min(stream.chunk_id, 199), ' is finish')
-
-            if len(self.buffer_x) >= 20:
+            threshold=self.get_buffer_type()
+            if len(self.buffer_x) >= threshold:
+                # print("your buffer size is: %s" % len(self.buffer_x))
+                self.stream_distribution.append([chunk_mean, chunk_std])
+                self.stream_update_times.append(math.floor(len(self.buffer_x) / threshold ))
+                self.stream_emergence_new_instance_count.append(len(self.buffer_x))
+                self.aggregated_buffer_length = self.aggregated_buffer_length + len(self.buffer_x);
                 drift_count+=1
                 try:
                     [c.partial_fit(X, y, self.stream_.classes_) for c in self.clfs_]
@@ -204,5 +225,13 @@ class MyTestThenTrain:
         return distances
 
 
-buffer_length = 2
+
+    def best_threshold(self,target):
+        # Calculate cosine similarity between the target row and all other rows
+        cosine_sim = cosine_similarity(self.stream_distribution,np.array(target).reshape(1, -1)).flatten()
+
+        # Get the indices of rows with the highest cosine similarity
+        most_similar_indices = np.argsort(cosine_sim)[::-1]  # Sorted in descending order
+        return self.stream_update_times[most_similar_indices[0]]
+
 centroids = []

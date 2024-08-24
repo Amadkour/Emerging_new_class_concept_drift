@@ -3,7 +3,8 @@ from sklearn.metrics import balanced_accuracy_score, f1_score
 
 import numpy as np
 from sklearn.naive_bayes import GaussianNB
-from skmultiflow.drift_detection import ADWIN, DDM
+# from skmultiflow.drift_detection import ADWIN, DDM
+from river.drift import ADWIN
 from sklearn.base import clone
 from skmultiflow.trees import HoeffdingTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
@@ -53,38 +54,39 @@ def worker(i, stream_n):
 
         )]
 
-    threshold = [10]
+    thresholds = ['adaptive','5','10','20']
     cclfs = [clone(clf) for clf in classifiers[0]]
-    eval = MyTestThenTrain(
-        cclfs,
-        algoritnmsName=algorithms,
-        metrics=(
-            balanced_accuracy_score,
-            geometric_mean_score_1,
-            f1_score,
-            precision,
-            recall,
-        ),
-        concept_drift_method=drift_methods[0],
-        thresold=threshold[0],
-    )
-    for index,algorithm in enumerate(algorithms):
-            start_time = time.perf_counter()
-            streams = helper.realstreams()
-            print("Starting stream %i/%i" % (i + 1, len(streams)))
-            eval.process(
-                streams[stream_n],
-                algorithm=algorithm,
-                algorithmIndex=index
-            )
+    for threshold in thresholds:
+        for index,algorithm in enumerate(algorithms):
+                start_time = time.perf_counter()
+                streams = helper.realstreams()
+                eval = MyTestThenTrain(
+                    cclfs,
+                    algoritnmsName=algorithms,
+                    buffer_type=threshold,
+                    metrics=(
+                        balanced_accuracy_score,
+                        geometric_mean_score_1,
+                        f1_score,
+                        precision,
+                        recall,
+                    ),
+                    concept_drift_method=drift_methods[0],
+                )
+                print("Starting stream %i/%i" % (i + 1, len(streams)))
+                eval.process(
+                    streams[stream_n],
+                    algorithm=algorithm,
+                    algorithmIndex=index
+                )
 
-            finish_time = time.perf_counter()
-            print(f"==========(%s)=========finished in {finish_time - start_time} seconds"% (algorithm),)
+                finish_time = time.perf_counter()
+                print(f"==========(%s)===with threshold (%s)======finished in {finish_time - start_time} seconds"% (algorithm,threshold),)
 
-    results = eval.scores
-    # np.save(f"output/result1/%s/cover_type/%s" % (classifiers_name[index], t), results)
-    # np.save(f"output/result1/%s/synthetic/%s" % (classifiers_name[index], t), results)
-    np.save(f"output/result1/%s/cover_type/GNB" % (classifiers_name[0]), results)
+        results = eval.scores
+        # np.save(f"output/result1/%s/cover_type/%s" % (classifiers_name[index], t), results)
+        # np.save(f"output/result1/%s/synthetic/%s" % (classifiers_name[index], t), results)
+        np.save(f"output/result1/%s/cover_type/%s" % (classifiers_name[0],threshold), results)
 
 
 jobs = []
