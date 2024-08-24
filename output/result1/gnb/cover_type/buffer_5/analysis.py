@@ -16,7 +16,7 @@ rcParams["font.family"] = "monospace"
 colors = [(0, 0, 0), (0, 0, 0.9), (0, 0, 0.9), (0.9, 0, 0)]
 ls = ["--", "-", ":", "-"]
 lw = [1, 1, 1, 1]
-names = ['GNB']
+names = ['5']
 methods = ['SENCForst',
            'KENNE','SENNE',
            "PA",]
@@ -25,7 +25,6 @@ clfs = ["Cover Type"]
 
 
 # print(scores.shape)
-
 def plot_runs(
         clfs, metrics, selected_scores, methods, mean_scores, dependency, what
 ):
@@ -34,8 +33,6 @@ def plot_runs(
     for z, (value, label, mean) in enumerate(
             zip(selected_scores, methods, mean_scores)
     ):
-        label = "\n{0:.3f}".format(mean)
-
         val = gaussian_filter1d(value, sigma=3, mode="nearest")
         # val = medfilt(value, 3)
         # plt.plot(value, label=label, c=colors[z], ls=ls[z])
@@ -71,15 +68,15 @@ def plot_runs(
     plt.ylabel(metrics[i], fontfamily="serif", fontsize=6)
     plt.xlabel("chunks", fontfamily="serif", fontsize=6)
     plt.tight_layout()
-    if metrics[i] == "G-mean":
+    if metrics[i] == "G-mean" or metrics[i] == "f1_score" :
         # plt.show()
+        print(val)
         plt.savefig(
-            "%s_%s_%s2.png" % (
+            "%s_%s_%s.png" % (
             clfs[j], metrics[i], dependency),
             bbox_inches='tight', dpi=3000, pad_inches=0.0)
 
     plt.close()
-
 
 def plot_radars(
         methods, metrics, table, classifier_name, parameter_name, what
@@ -209,28 +206,29 @@ for j, name in enumerate(names):
     for j, clf in enumerate(clfs):
         print("\n###\n### %s\n###\n" % (clf))
         for i, metric in enumerate(metrics):
-            print("\n---\n--- %s\n---\n" % (metric))
             sub_scores = scores[:, :,i]
+            print(metric)
             reduced_scores = np.mean(sub_scores, axis=1)
+            print(reduced_scores)
 
             plot_runs(clfs, metrics, sub_scores, methods, reduced_scores, name,"")
 
             table = []
             header = ["LN"] + methods
-
-for j, name in enumerate(names):
-    print("\n---\n--- %s\n---\n" % (name))
-    scores = np.load("%s.npy" % name)
-
-    # Metryka
-    # drifttype, LABELNOISE, METHOD, CHUNK, METRYKA
-    reduced_scores2 = np.mean(scores, axis=1)
-    reduced_scores = np.mean(reduced_scores2, axis=1)
-    table = []
-    header = ["Metric"] + methods
-    for i, metric in enumerate(metrics):
-        # METHOD, CHUNK, Metryka
-        selected_scores = reduced_scores
-
-        table.append([metric] + ["%.3f" % score for score in selected_scores])
-    plot_radars(methods, metrics, table, clfs[0], name, name)
+#
+# for j, name in enumerate(names):
+#     print("\n---\n--- %s\n---\n" % (name))
+#     scores = np.load("%s.npy" % name)
+#
+#     # Metryka
+#     # drifttype, LABELNOISE, METHOD, CHUNK, METRYKA
+#     reduced_scores2 = np.mean(scores, axis=1)
+#     reduced_scores = np.mean(reduced_scores2, axis=1)
+#     table = []
+#     header = ["Metric"] + methods
+#     for i, metric in enumerate(metrics):
+#         # METHOD, CHUNK, Metryka
+#         selected_scores = reduced_scores
+#
+#         table.append([metric] + ["%.3f" % score for score in selected_scores])
+#     plot_radars(methods, metrics, table, clfs[0], name, name)

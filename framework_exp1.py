@@ -54,24 +54,20 @@ def worker(i, stream_n):
         )]
 
     thresholds = ['adaptive','5','10','20']
+    # thresholds = ['20']
     cclfs = [clone(clf) for clf in classifiers[0]]
     for threshold in thresholds:
+
+        eval = MyTestThenTrain(
+            cclfs,
+            algoritnms_count=len(algorithms),
+            buffer_type=threshold,
+            metrics=(balanced_accuracy_score,geometric_mean_score_1,f1_score,precision,recall),
+            concept_drift_method=drift_methods[0],
+        )
         for index,algorithm in enumerate(algorithms):
                 start_time = time.perf_counter()
                 streams = helper.realstreams()
-                eval = MyTestThenTrain(
-                    cclfs,
-                    algoritnmsName=algorithms,
-                    buffer_type=threshold,
-                    metrics=(
-                        balanced_accuracy_score,
-                        geometric_mean_score_1,
-                        f1_score,
-                        precision,
-                        recall,
-                    ),
-                    concept_drift_method=drift_methods[0],
-                )
                 print("Starting stream %i/%i" % (i + 1, len(streams)))
                 eval.process(
                     streams[stream_n],

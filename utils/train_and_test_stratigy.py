@@ -17,7 +17,7 @@ from preprocessing.SENNE import SENNE
 class MyTestThenTrain:
 
     def __init__(
-            self,classifier,algoritnmsName,buffer_type, metrics=(accuracy_score, balanced_accuracy_score), concept_drift_method=None,
+            self,classifier,algoritnms_count,buffer_type, metrics=(accuracy_score, balanced_accuracy_score), concept_drift_method=None,
             verbose=False
     ):
         self.stream_ = None
@@ -43,7 +43,7 @@ class MyTestThenTrain:
 
         self.verbose = verbose
         self.scores = np.zeros(
-            (len(algoritnmsName), 200, len(self.metrics))
+            (algoritnms_count, 200, len(self.metrics))
         )
     def get_buffer_type(self):
         if self.buffer_type=='5':
@@ -58,8 +58,6 @@ class MyTestThenTrain:
         indices = [i for i, y in enumerate(y_pred) if y == -1]
         self.buffer_x.extend(X[indices])
         indices2 = [i for i, x in enumerate(y_pred) if x != -1]
-        # print(np.unique(y[indices2]))
-        # print(np.unique(y_pred[indices2],))
         self.scores[algorithmIndex, stream_index] = [
             metric(y[indices2], y_pred[indices2], average='macro') if metric == f1_score else metric(y[indices2],
                                                                                                    y_pred[indices2])

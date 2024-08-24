@@ -1,9 +1,11 @@
-==================[number of updates: 9]
-==========(SENCForst)=========finished in 1526.6744813999999 seconds
+==================[number of updates: 3]
+==========(SENNE)===with threshold (20)======finished in 2492.418227499991 seconds
 
-==================[number of updates: 10]
-==========(KENNE)=========finished in 1735.1332200000002 seconds
+==================[number of updates: 3]
+==========(KENNE)===with threshold (20)======finished in 2474.0950539999976 seconds
 
-==========(SENNE)=========finished in 11712.706617299991 seconds
-==================[number of updates: 58]
-==========(PA)=========finished in 3412.0451183000005 seconds
+==================[number of updates: 3]
+==========(SENNE)===with threshold (20)======finished in 2492.418227499991 seconds
+
+==================[number of updates: 63]
+==========(PA)===with threshold (20)======finished in 2244.2315718000027 seconds
