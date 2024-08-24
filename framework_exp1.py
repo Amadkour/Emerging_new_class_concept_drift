@@ -53,7 +53,7 @@ def worker(i, stream_n):
 
         )]
 
-    thresholds = ['adaptive','5','10','20']
+    thresholds = ['adaptive','5','10']
     # thresholds = ['20']
     cclfs = [clone(clf) for clf in classifiers[0]]
     for threshold in thresholds:

@@ -16,7 +16,7 @@ rcParams["font.family"] = "monospace"
 colors = [(0, 0, 0), (0, 0, 0.9), (0, 0, 0.9), (0.9, 0, 0), (0.9, 0, 0)]
 ls = ["--", "-", ":", "-", ":"]
 lw = [1, 1, 1, 1, 1]
-names = ['10']
+names = ['adaptive']
 methods = ['SENCForst',
            'KENNE','SENNE',
            "PA",]
