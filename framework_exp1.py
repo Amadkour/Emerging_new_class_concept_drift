@@ -3,10 +3,9 @@ from sklearn.metrics import balanced_accuracy_score, f1_score
 
 import numpy as np
 from sklearn.naive_bayes import GaussianNB
-# from skmultiflow.drift_detection import ADWIN, DDM
 from river.drift import ADWIN
 from sklearn.base import clone
-from skmultiflow.trees import HoeffdingTreeClassifier
+from river.tree import HoeffdingTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 
