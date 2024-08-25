@@ -137,7 +137,7 @@ class MyTestThenTrain:
                         # self.concept_drift_method.add_element(y_prediction[index2])
                         self.concept_drift_method.update(y_prediction[index2])
                         # if self.concept_drift_method.detected_change():
-                        if self.concept_drift_method.drift_detected:
+                        if self.concept_drift_method.change_detected:
                             # self.calculations(X[index2], y_prediction[index2], concept_drift_method,clf)
                             self.calculations(X, y, index2, self.concept_drift_method)
                         self.scores[algorithmIndex, stream.chunk_id - 1] = [
