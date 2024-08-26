@@ -15,12 +15,12 @@ rcParams["font.family"] = "monospace"
 colors = [(0, 0, 0), (0, 0, 0.9), (0, 0, 0.9), (0.9, 0, 0), (0.9, 0, 0)]
 ls = ["--", "-", ":", "-", ":"]
 lw = [1, 1, 1, 1, 1]
-names = ['5']
+names = ['adaptive']
 methods = ['SENCForst',
            'KENNE','SENNE',
            "PA",]
 metrics = ["Balanced accuracy", "G-mean",'f1_score', "precision", "recall"]
-clfs = ["Sensor"]
+clfs = ["Cover Type"]
 
 
 # print(scores.shape)

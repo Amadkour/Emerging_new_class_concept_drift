@@ -2,7 +2,6 @@
 Analiza zależności od szumu
 """
 import numpy as np
-from tabulate import tabulate
 import matplotlib.pyplot as plt
 from scipy.signal import medfilt
 import pandas as pd
@@ -16,7 +15,7 @@ rcParams["font.family"] = "monospace"
 colors = [(0, 0, 0), (0, 0, 0.9), (0, 0, 0.9), (0.9, 0, 0), (0.9, 0, 0)]
 ls = ["--", "-", ":", "-", ":"]
 lw = [1, 1, 1, 1, 1]
-names = ['GNB']
+names = ['10']
 methods = ['SENCForst',
            'KENNE','SENNE',
            "PA",]
@@ -34,8 +33,6 @@ def plot_runs(
     for z, (value, label, mean) in enumerate(
             zip(selected_scores, methods, mean_scores)
     ):
-        label = label
-
         val = gaussian_filter1d(value, sigma=3, mode="nearest")
         # val = medfilt(value, 3)
         # plt.plot(value, label=label, c=colors[z], ls=ls[z])
@@ -73,6 +70,7 @@ def plot_runs(
     plt.tight_layout()
     if metrics[i] == "G-mean" or metrics[i] == "f1_score" :
         # plt.show()
+        print(val)
         plt.savefig(
             "%s_%s_%s.png" % (
             clfs[j], metrics[i], dependency),
@@ -208,22 +206,22 @@ for j, name in enumerate(names):
 
             table = []
             header = ["LN"] + methods
-
-for j, name in enumerate(names):
-    scores = np.load("%s.npy" % name)
-
-    # Metryka
-    # drifttype, LABELNOISE, METHOD, CHUNK, METRYKA
-    reduced_scores2 = np.mean(scores, axis=1)
-
-    table = []
-    header = ["Metric"] + methods
-    for i, metric in enumerate(metrics):
-        # if(i==3 or i==2):
-        #     print(metric)
-        #     reduced_scores2[:, i][3]+=0.5
-        # reduced_scores2[:, i][3]+=0.2
-
-        selected_scores =reduced_scores2[:,i]
-        table.append([metric] + ["%.3f" % score for k,score in enumerate(selected_scores)])
-    plot_radars(methods, metrics, table, clfs[0], name, name)
+#
+# for j, name in enumerate(names):
+#     scores = np.load("%s.npy" % name)
+#
+#     # Metryka
+#     # drifttype, LABELNOISE, METHOD, CHUNK, METRYKA
+#     reduced_scores2 = np.mean(scores, axis=1)
+#
+#     table = []
+#     header = ["Metric"] + methods
+#     # for i, metric in enumerate(metrics):
+#     #     if(i==3 or i==2):
+#     #         print(metric)
+#     #         reduced_scores2[:, i][3]+=0.5
+#     #     reduced_scores2[:, i][3]+=0.2
+#
+#         selected_scores =reduced_scores2[:,i]
+#         table.append([metric] + ["%.3f" % score for k,score in enumerate(selected_scores)])
+#     plot_radars(methods, metrics, table, clfs[0], name, name)
